@@ -94,9 +94,9 @@ async function collectAndSaveSolarData() {
                 solar_panel_2_voltage: data["solar_panel_2_voltage"],
                 solar_panel_2_current: data["solar_panel_2_current"],
                 solar_panel_2_power: data["solar_panel_2_power"],
-                controller_battery_temperature: data["controller_battery_temperature"],
-                charging_upper_limit_temperature: data["charging_upper_limit_temperature"],
-                charging_lower_limit_temperature: data["charging_lower_limit_temperature"],
+                controller_battery_temperature: data["controller_battery_temperature"], // Assuming this maps to a temperature register
+                charging_upper_limit_temperature: data["charging_upper_limit_temperature"], // Assuming this maps to a temperature register
+                charging_lower_limit_temperature: data["charging_lower_limit_temperature"], // Assuming this maps to a temperature register
                 heat_sink_a_temperature: data["heat_sink_a_temperature"],
                 heat_sink_b_temperature: data["heat_sink_b_temperature"],
                 heat_sink_c_temperature: data["heat_sink_c_temperature"],
@@ -106,6 +106,17 @@ async function collectAndSaveSolarData() {
                 stop_charging_current: data["stop_charging_current"],
                 stop_charging_capacity: data["stop_charging_capacity"],
                 immediate_equalization_charge_command: data["immediate_equalization_charge_command"],
+                load_voltage: data["load_voltage"], // New field for Load Voltage
+                load_current: data["load_current"], // New field for Load Current
+                load_power: data["load_power"], // New field for Load Power
+                battery_soc: data["battery_soc"], // New field for Battery SOC
+                grid_a_phase_voltage: data["grid_a_phase_voltage"], // New field for Grid A Phase Voltage
+                grid_a_phase_current: data["grid_a_phase_current"], // New field for Grid A Phase Current
+                grid_frequency: data["grid_frequency"], // New field for Grid Frequency
+                inverter_phase_a_voltage: data["inverter_phase_a_voltage"], // New field for Inverter Phase A Voltage
+                inverter_phase_a_current: data["inverter_phase_a_current"], // New field for Inverter Phase A Current
+                inverter_frequency: data["inverter_frequency"], // New field for Inverter Frequency
+                pv_charging_current: data["pv_charging_current"], // New field for PV Charging Current
                 errors: JSON.stringify(data["errors"]),
             });
 

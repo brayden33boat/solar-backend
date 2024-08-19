@@ -32,13 +32,13 @@ def read_register(client, address, description, scaling_factor=1, errors=[]):
 
 def main():
     client = ModbusSerialClient(
-    port=port,
-    baudrate=baudrate,
-    timeout=timeout,
-    parity=parity,
-    stopbits=stopbits,
-    bytesize=bytesize
-)
+        port=port,
+        baudrate=baudrate,
+        timeout=timeout,
+        parity=parity,
+        stopbits=stopbits,
+        bytesize=bytesize
+    )
 
     if not client.connect():
         print("Failed to connect to Modbus device")
@@ -54,8 +54,10 @@ def main():
         client.unit_id = slave_address
 
         # Read multiple variables and store the results in the dictionary
+        data["battery_soc"] = read_register(client, 0x0100, "Battery SOC", scaling_factor=1, errors=errors)
         data["battery_voltage"] = read_register(client, 0x0101, "Battery Voltage", scaling_factor=0.1, errors=errors)
         data["battery_current"] = read_register(client, 0x0102, "Battery Current", scaling_factor=0.1, errors=errors)
+        data["device_temperature"] = read_register(client, 0x0103, "Device Temperature", scaling_factor=1, errors=errors)
         data["solar_panel_1_voltage"] = read_register(client, 0x0107, "Solar Panel 1 Voltage", scaling_factor=0.1, errors=errors)
         data["solar_panel_1_current"] = read_register(client, 0x0108, "Solar Panel 1 Current", scaling_factor=0.1, errors=errors)
         data["solar_panel_1_power"] = read_register(client, 0x0109, "Solar Panel 1 Power", scaling_factor=1, errors=errors)
@@ -64,11 +66,27 @@ def main():
         data["solar_panel_2_voltage"] = read_register(client, 0x010F, "Solar Panel 2 Voltage", scaling_factor=0.1, errors=errors)
         data["solar_panel_2_current"] = read_register(client, 0x0110, "Solar Panel 2 Current", scaling_factor=0.1, errors=errors)
         data["solar_panel_2_power"] = read_register(client, 0x0111, "Solar Panel 2 Power", scaling_factor=1, errors=errors)
-
+        data["load_voltage"] = read_register(client, 0x0112, "Load Voltage", scaling_factor=0.1, errors=errors)
+        data["load_current"] = read_register(client, 0x0113, "Load Current", scaling_factor=0.1, errors=errors)
+        data["load_power"] = read_register(client, 0x0114, "Load Power", scaling_factor=1, errors=errors)
+        data["grid_a_phase_voltage"] = read_register(client, 0x0213, "Grid A Phase Voltage", scaling_factor=0.1, errors=errors)
+        data["grid_a_phase_current"] = read_register(client, 0x0214, "Grid A Phase Current", scaling_factor=0.1, errors=errors)
+        data["grid_frequency"] = read_register(client, 0x0215, "Grid Frequency", scaling_factor=0.01, errors=errors)
+        data["inverter_phase_a_voltage"] = read_register(client, 0x0216, "Inverter Phase A Voltage", scaling_factor=0.1, errors=errors)
+        data["inverter_phase_a_current"] = read_register(client, 0x0217, "Inverter Phase A Current", scaling_factor=0.1, errors=errors)
+        data["inverter_frequency"] = read_register(client, 0x0218, "Inverter Frequency", scaling_factor=0.01, errors=errors)
+        data["load_phase_a_current"] = read_register(client, 0x0219, "Load Phase A Current", scaling_factor=0.1, errors=errors)
+        data["load_phase_a_active_power"] = read_register(client, 0x021B, "Load Phase A Active Power", scaling_factor=1, errors=errors)
+        data["heat_sink_a_temperature"] = read_register(client, 0x0220, "Heat Sink A Temperature", scaling_factor=0.1, errors=errors)
+        data["heat_sink_b_temperature"] = read_register(client, 0x0221, "Heat Sink B Temperature", scaling_factor=0.1, errors=errors)
+        data["heat_sink_c_temperature"] = read_register(client, 0x0222, "Heat Sink C Temperature", scaling_factor=0.1, errors=errors)
+        data["ambient_temperature"] = read_register(client, 0x0223, "Ambient Temperature", scaling_factor=0.1, errors=errors)
+        data["pv_charging_current"] = read_register(client, 0x0224, "PV Charging Current", scaling_factor=0.1, errors=errors)
+        data["discharge_limiting_voltage"] = read_register(client, 0xE00E, "Discharge Limiting Voltage", scaling_factor=0.1, errors=errors)
+    
 
     except Exception as e:
         errors.append(f"An error occurred: {e}")
-        sys.exit(1)
     
     client.close()
 

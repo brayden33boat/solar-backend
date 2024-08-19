@@ -84,6 +84,39 @@ const SolarData = sequelize.define('SolarData', {
     immediate_equalization_charge_command: {
         type: DataTypes.INTEGER,
     },
+    load_voltage: {
+        type: DataTypes.REAL,
+    },
+    load_current: {
+        type: DataTypes.REAL,
+    },
+    load_power: {
+        type: DataTypes.REAL,
+    },
+    battery_soc: {
+        type: DataTypes.REAL,
+    },
+    grid_a_phase_voltage: {
+        type: DataTypes.REAL,
+    },
+    grid_a_phase_current: {
+        type: DataTypes.REAL,
+    },
+    grid_frequency: {
+        type: DataTypes.REAL,
+    },
+    inverter_phase_a_voltage: {
+        type: DataTypes.REAL,
+    },
+    inverter_phase_a_current: {
+        type: DataTypes.REAL,
+    },
+    inverter_frequency: {
+        type: DataTypes.REAL,
+    },
+    pv_charging_current: {
+        type: DataTypes.REAL,
+    },
     errors: {
         type: DataTypes.TEXT,
     },
