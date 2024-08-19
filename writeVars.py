@@ -31,6 +31,7 @@ register_map = {
     'over_discharge_voltage': 0xE00D,  # Over-discharge voltage
     'discharge_cutoff_soc': 0xE00F,    # Discharge cut-off SOC
     'inverter_switch': 0xDF00,         # Inverter switch control
+    'battery_charge_status': 0x10B,    # Battery charge status control
 }
 
 def write_register(register_name, value):

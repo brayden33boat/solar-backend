@@ -117,6 +117,8 @@ async function collectAndSaveSolarData() {
                 inverter_phase_a_current: data["inverter_phase_a_current"], // New field for Inverter Phase A Current
                 inverter_frequency: data["inverter_frequency"], // New field for Inverter Frequency
                 pv_charging_current: data["pv_charging_current"], // New field for PV Charging Current
+                battery_charge_status: data["battery_charge_status"],
+                inverter_switch_status: data["inverter_switch_status"],
                 errors: JSON.stringify(data["errors"]),
             });
 

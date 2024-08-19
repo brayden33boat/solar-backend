@@ -83,6 +83,9 @@ def main():
         data["ambient_temperature"] = read_register(client, 0x0223, "Ambient Temperature", scaling_factor=0.1, errors=errors)
         data["pv_charging_current"] = read_register(client, 0x0224, "PV Charging Current", scaling_factor=0.1, errors=errors)
         data["discharge_limiting_voltage"] = read_register(client, 0xE00E, "Discharge Limiting Voltage", scaling_factor=0.1, errors=errors)
+        data["battery_charge_status"] = read_register(client, 0x10B, "Battery Charge Status", errors=errors)
+        data["inverter_switch_status"] = read_register(client, 0xDF00, "Inverter Switch Status", errors=errors)
+
     
 
     except Exception as e:

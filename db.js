@@ -117,6 +117,12 @@ const SolarData = sequelize.define('SolarData', {
     pv_charging_current: {
         type: DataTypes.REAL,
     },
+    battery_charge_status: {
+        type: DataTypes.INTEGER,
+    },
+    inverter_switch_status: {
+        type: DataTypes.INTEGER,
+    },
     errors: {
         type: DataTypes.TEXT,
     },
