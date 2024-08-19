@@ -2,13 +2,34 @@ import express from 'express';
 import getSolarData from './getVars.js';
 import { SolarData } from './db.js';
 import { Op } from 'sequelize';
+import { Server } from 'socket.io';
+import http from 'http';
+import cors from 'cors';
 
 const app = express();
+const server = http.createServer(app);  // Create an HTTP server with Express
 const port = 3000;
+
+const io = new Server(server, {
+    path: '/ws',  // Set custom path for WebSocket
+    cors: {
+        origin: "*",  // Allow all origins for testing
+        methods: ["GET", "POST"],
+    }
+});
+
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
+
+app.use(cors());
 
 app.get('/solar-data', async (req, res) => {
     try {
-        // Fetch the latest solar data entry
         const latestData = await SolarData.findOne({
             order: [['timestamp', 'DESC']],
         });
@@ -26,13 +47,11 @@ app.get('/solar-data', async (req, res) => {
     }
 });
 
-// New endpoint to get the last week's solar data
 app.get('/solar-data-week', async (req, res) => {
     try {
         const oneWeekAgo = new Date();
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-        // Fetch solar data entries from the last week
         const weeklyData = await SolarData.findAll({
             where: {
                 timestamp: {
@@ -56,7 +75,6 @@ app.get('/solar-data-week', async (req, res) => {
     }
 });
 
-// Function to collect and save solar data
 async function collectAndSaveSolarData() {
     getSolarData(async (error, data) => {
         if (error) {
@@ -65,8 +83,7 @@ async function collectAndSaveSolarData() {
         }
 
         try {
-            // Save the solar data using Sequelize
-            await SolarData.create({
+            const savedData = await SolarData.create({
                 battery_voltage: data["battery_voltage"],
                 battery_current: data["battery_current"],
                 solar_panel_1_voltage: data["solar_panel_1_voltage"],
@@ -91,17 +108,18 @@ async function collectAndSaveSolarData() {
                 immediate_equalization_charge_command: data["immediate_equalization_charge_command"],
                 errors: JSON.stringify(data["errors"]),
             });
-            
+
             console.log('Solar data saved successfully.');
+            io.emit('solarDataUpdate', savedData);
         } catch (saveError) {
             console.error('Failed to save solar data:', saveError.message);
         }
     });
 }
 
-// Set an interval to collect and save data every 5 minutes (600,000 ms)
 setInterval(collectAndSaveSolarData, 5 * 60 * 1000);
 
-app.listen(port, () => {
+// Use the server created with http.createServer
+server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
