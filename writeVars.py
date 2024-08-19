@@ -1,7 +1,7 @@
 import os
 import sys
 import json
-from pymodbus.client.sync import ModbusSerialClient
+from pymodbus.client import ModbusSerialClient
 from pymodbus.exceptions import ModbusIOException
 from dotenv import load_dotenv
 
@@ -30,6 +30,7 @@ register_map = {
     'undervoltage_warning_voltage': 0xE00C, # Undervoltage warning voltage
     'over_discharge_voltage': 0xE00D,  # Over-discharge voltage
     'discharge_cutoff_soc': 0xE00F,    # Discharge cut-off SOC
+    'inverter_switch': 0xDF00,         # Inverter switch control
 }
 
 def write_register(register_name, value):
@@ -51,7 +52,6 @@ def write_register(register_name, value):
 
     # Initialize the Modbus client
     client = ModbusSerialClient(
-        method='rtu',
         port=port,
         baudrate=baudrate,
         timeout=timeout,
@@ -64,7 +64,7 @@ def write_register(register_name, value):
         if client.connect():
             result["message"] = f"Connected to Modbus device on port {port}"
             # Write value to the register
-            response = client.write_register(address, value, unit=1)
+            response = client.write_register(address, value)
             if isinstance(response, ModbusIOException):
                 result["message"] = f"Failed to write to register: {response}"
             else:
