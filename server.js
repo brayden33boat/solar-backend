@@ -47,6 +47,42 @@ app.get('/solar-data', async (req, res) => {
     }
 });
 
+app.get('/solar-data-week/:attributeName', async (req, res) => {
+    try {
+        const { attributeName } = req.params;
+        const validAttributes = ['battery_voltage', 'total_charging_power']; // Add all valid attribute names here
+
+        // Check if the requested attribute is valid
+        if (!validAttributes.includes(attributeName)) {
+            return res.status(400).json({ message: 'Invalid attribute name' });
+        }
+
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+        const weeklyData = await SolarData.findAll({
+            where: {
+                timestamp: {
+                    [Op.gte]: oneWeekAgo
+                }
+            },
+            order: [['timestamp', 'DESC']],
+            attributes: [attributeName, 'timestamp'] // Use the dynamic attribute name
+        });
+
+        if (!weeklyData || weeklyData.length === 0) {
+            return res.status(404).json({ message: 'No solar data found for the last week' });
+        }
+
+        res.json(weeklyData);
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Failed to retrieve solar data',
+            error: error.message,
+        });
+    }
+});
+
 app.get('/solar-data-week', async (req, res) => {
     try {
         const oneWeekAgo = new Date();
