@@ -214,6 +214,7 @@ async function collectAndProcessSolarData() {
                     pv_charging_current: data["pv_charging_current"],
                     battery_charge_status: data["battery_charge_status"],
                     inverter_switch_status: data["inverter_switch_status"],
+                    charge_limit_voltage: data["charge_limit_voltage"],
                     errors: JSON.stringify(data["errors"]),
                 });
 

@@ -85,6 +85,7 @@ def main():
         data["discharge_limiting_voltage"] = read_register(client, 0xE00E, "Discharge Limiting Voltage", scaling_factor=0.1, errors=errors)
         data["battery_charge_status"] = read_register(client, 0x10B, "Battery Charge Status", errors=errors)
         data["inverter_switch_status"] = read_register(client, 0xDF00, "Inverter Switch Status", errors=errors)
+        data["charge_limit_voltage"] = read_register(client, 0xE006, "Charge Limit Voltage",scaling_factor=0.1, errors=errors)
 
     
 
