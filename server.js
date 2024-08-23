@@ -215,6 +215,17 @@ async function collectAndProcessSolarData() {
                     battery_charge_status: data["battery_charge_status"],
                     inverter_switch_status: data["inverter_switch_status"],
                     charge_limit_voltage: data["charge_limit_voltage"],
+                    current_fault_bit: data["current_fault_bit"],
+                    current_fault_code: data["current_fault_code"],
+                    grid_b_phase_voltage: data["grid_b_phase_voltage"],
+                    grid_c_phase_voltage: data["grid_c_phase_voltage"],
+                    inverter_b_phase_voltage: data["inverter_b_phase_voltage"],
+                    inverter_c_phase_voltage: data["inverter_c_phase_voltage"],
+                    grid_b_phase_current: data["grid_b_phase_current"],
+                    grid_c_phase_current: data["grid_c_phase_current"],
+                    positive_bus_voltage: data["positive_bus_voltage"],
+                    negative_bus_voltage: data["negative_bus_voltage"],
+                    battery_nominal_capacity: data["battery_nominal_capacity"],
                     errors: JSON.stringify(data["errors"]),
                 });
 

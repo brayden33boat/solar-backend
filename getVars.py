@@ -86,6 +86,18 @@ def main():
         data["battery_charge_status"] = read_register(client, 0x10B, "Battery Charge Status", errors=errors)
         data["inverter_switch_status"] = read_register(client, 0xDF00, "Inverter Switch Status", errors=errors)
         data["charge_limit_voltage"] = read_register(client, 0xE006, "Charge Limit Voltage",scaling_factor=0.1, errors=errors)
+        data["battery_nominal_capacity"] = read_register(client, 0xE002, "Battery Nominal Capacity", scaling_factor=1, errors=errors)
+        data["current_fault_bit"] = read_register(client, 0x0200, "Current Fault Bit", scaling_factor=1, errors=errors)
+        data["current_fault_code"] = read_register(client, 0x0204, "Current Fault Code", scaling_factor=1, errors=errors)
+        data["grid_b_phase_voltage"] = read_register(client, 0x022A, "Grid B-phase Voltage", scaling_factor=0.1, errors=errors)
+        data["grid_c_phase_voltage"] = read_register(client, 0x022B, "Grid C-phase Voltage", scaling_factor=0.1, errors=errors)
+        data["inverter_b_phase_voltage"] = read_register(client, 0x022C, "Inverter B-phase Voltage", scaling_factor=0.1, errors=errors)
+        data["inverter_c_phase_voltage"] = read_register(client, 0x022D, "Inverter C-phase Voltage", scaling_factor=0.1, errors=errors)
+        data["grid_b_phase_current"] = read_register(client, 0x0238, "Grid B-phase Current", scaling_factor=0.1, errors=errors)
+        data["grid_c_phase_current"] = read_register(client, 0x0239, "Grid C-phase Current", scaling_factor=0.1, errors=errors)
+        data["positive_bus_voltage"] = read_register(client, 0x0228, "Positive Bus Voltage", scaling_factor=0.1, errors=errors)
+        data["negative_bus_voltage"] = read_register(client, 0x0229, "Negative Bus Voltage", scaling_factor=0.1, errors=errors)
+
 
     
 

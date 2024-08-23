@@ -31,7 +31,6 @@ register_map = {
     'over_discharge_voltage': 0xE00D,  # Over-discharge voltage
     'discharge_cutoff_soc': 0xE00F,    # Discharge cut-off SOC
     'inverter_switch': 0xDF00,         # Inverter switch control
-    'battery_charge_status': 0x10B,    # Battery charge status control
 }
 
 def write_register(register_name, value):
@@ -63,14 +62,19 @@ def write_register(register_name, value):
 
     try:
         if client.connect():
+            # Assume the slave address is 1
+            slave_address = 1
+            client.unit_id = slave_address
+            
             result["message"] = f"Connected to Modbus device on port {port}"
             # Write value to the register
             response = client.write_register(address, value)
-            if isinstance(response, ModbusIOException):
+            if response.isError():
                 result["message"] = f"Failed to write to register: {response}"
             else:
                 result["status"] = "success"
                 result["message"] = f"Successfully wrote value {value} to register '{register_name}' at address {hex(address)}"
+
         else:
             result["message"] = "Failed to connect to the Modbus device."
     finally:

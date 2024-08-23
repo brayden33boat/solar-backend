@@ -126,6 +126,39 @@ const SolarData = sequelize.define('SolarData', {
     charge_limit_voltage: {
         type: DataTypes.INTEGER,
     },
+    current_fault_bit: {
+        type: DataTypes.INTEGER,
+    },
+    current_fault_code: {
+        type: DataTypes.INTEGER,
+    },
+    battery_nominal_capacity: {
+        type: DataTypes.INTEGER,
+    },
+    grid_b_phase_voltage: {
+        type: DataTypes.REAL,
+    },
+    grid_c_phase_voltage: {
+        type: DataTypes.REAL,
+    },
+    inverter_b_phase_voltage: {
+        type: DataTypes.REAL,
+    },
+    inverter_c_phase_voltage: {
+        type: DataTypes.REAL,
+    },
+    grid_b_phase_current: {
+        type: DataTypes.REAL,
+    },
+    grid_c_phase_current: {
+        type: DataTypes.REAL,
+    },
+    positive_bus_voltage: {
+        type: DataTypes.REAL,
+    },
+    negative_bus_voltage: {
+        type: DataTypes.REAL,
+    },    
     errors: {
         type: DataTypes.TEXT,
     },
