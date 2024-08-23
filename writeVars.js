@@ -7,7 +7,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Replace with the path to your Python script
-const pythonScriptPath = path.join(__dirname, 'your_python_script.py');
+const pythonPath = path.join(__dirname, 'myenv', 'bin', 'python3');
+const scriptPath = path.join(__dirname, 'writeVars.py');
 
 /**
  * Writes a value to a specified Modbus register using a Python script.
@@ -15,9 +16,9 @@ const pythonScriptPath = path.join(__dirname, 'your_python_script.py');
  * @param {number} value - The value to write to the register.
  * @returns {Promise<Object>} - A promise that resolves with the JSON output of the Python script.
  */
-export async function writeToRegister(registerName, value) {
+export default async function writeToRegister(registerName, value) {
   return new Promise((resolve, reject) => {
-    execFile('python', [pythonScriptPath, registerName, value], (error, stdout, stderr) => {
+    execFile(pythonPath, [scriptPath, registerName, value.toString()], (error, stdout, stderr) => {
       if (error) {
         return reject(`Error executing Python script: ${error.message}`);
       }

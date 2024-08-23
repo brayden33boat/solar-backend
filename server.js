@@ -5,12 +5,29 @@ import { Op } from 'sequelize';
 import { Server } from 'socket.io';
 import http from 'http';
 import cors from 'cors';
-import { writeToRegister } from './writeVars.js';
+import writeToRegister from './writeVars.js';
 
 
 const app = express();
 const server = http.createServer(app);  // Create an HTTP server with Express
 const port = 3000;
+
+const availableRegisters = [
+    'pv_max_charging_current',        // Photovoltaic maximum charging current setting
+    'battery_nominal_capacity',       // Battery nominal capacity
+    'battery_type',                   // Battery type
+    'overvoltage',                    // Overvoltage protection point
+    'charge_limit_voltage',           // Charge limit voltage
+    'balanced_charge_voltage',        // Balanced charging voltage
+    'boost_charge_voltage',           // Boost charging voltage/overcharge voltage
+    'float_charge_voltage',           // Float charge voltage
+    'boost_charge_return_voltage',    // Boost charge return voltage
+    'undervoltage_warning_voltage',   // Undervoltage warning voltage
+    'over_discharge_voltage',         // Over-discharge voltage
+    'discharge_cutoff_soc',           // Discharge cut-off SOC
+    'inverter_switch',                // Inverter switch control
+    'battery_charge_status',          // Battery charge status control
+];
 
 const io = new Server(server, {
     path: '/ws',  // Set custom path for WebSocket
@@ -29,6 +46,7 @@ io.on('connection', (socket) => {
 });
 
 app.use(cors());
+app.use(express.json());
 
 app.get('/solar-data', async (req, res) => {
     try {
@@ -51,24 +69,7 @@ app.get('/solar-data', async (req, res) => {
 
 app.post('/solar-set-var/:attributeName', async (req, res) => {
     const { attributeName } = req.params;
-    const { value } = req.body;
-
-    const availableRegisters = [
-        'pv_max_charging_current',        // Photovoltaic maximum charging current setting
-        'battery_nominal_capacity',       // Battery nominal capacity
-        'battery_type',                   // Battery type
-        'overvoltage',                    // Overvoltage protection point
-        'charge_limit_voltage',           // Charge limit voltage
-        'balanced_charge_voltage',        // Balanced charging voltage
-        'boost_charge_voltage',           // Boost charging voltage/overcharge voltage
-        'float_charge_voltage',           // Float charge voltage
-        'boost_charge_return_voltage',    // Boost charge return voltage
-        'undervoltage_warning_voltage',   // Undervoltage warning voltage
-        'over_discharge_voltage',         // Over-discharge voltage
-        'discharge_cutoff_soc',           // Discharge cut-off SOC
-        'inverter_switch',                // Inverter switch control
-        'battery_charge_status',          // Battery charge status control
-    ];
+    const { value } = req.body ?? {};
 
     if (typeof value === 'undefined') {
         return res.status(400).json({ error: 'Value is required in the request body.' });
@@ -78,10 +79,13 @@ app.post('/solar-set-var/:attributeName', async (req, res) => {
         return res.status(400).json({ error: 'Attribute not recognized.' });
     }
 
+    console.log("Writing to regsiter", attributeName, value);
+
     try {
         const result = await writeToRegister(attributeName, value);
         res.status(200).json({ message: 'Register updated successfully', result });
     } catch (error) {
+        console.error(`Failed to update register: ${error}`);
         res.status(500).json({ error: `Failed to update register: ${error}` });
     }
 });
@@ -227,6 +231,23 @@ async function collectAndProcessSolarData() {
 // Run the function every 5 seconds (5000 milliseconds)
 setInterval(collectAndProcessSolarData, 5000);
 
+// Global Error Handling Middleware
+app.use((err, req, res, next) => {
+    console.error('Error:', err.message);
+    res.status(500).json({ error: 'An unexpected error occurred, but the server is still running.' });
+});
+
+// Catch Uncaught Exceptions
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err.message);
+    // Keep the server running
+});
+
+// Handle Unhandled Promise Rejections
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection:', reason.message);
+    // Keep the server running
+});
 
 // Use the server created with http.createServer
 server.listen(port, () => {
